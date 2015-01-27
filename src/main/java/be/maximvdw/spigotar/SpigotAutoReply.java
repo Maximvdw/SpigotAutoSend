@@ -67,6 +67,7 @@ public class SpigotAutoReply {
 						List<Conversation> latestConversations = new ArrayList<Conversation>();
 						latestConversations = SpigotSite.getAPI()
 								.getUserManager().getConversations(user, 20);
+						boolean hasSend = false;
 						for (Conversation conv : latestConversations) {
 							if (!getConversations().contains(conv)) {
 								Console.info("Received a new message:");
@@ -75,7 +76,12 @@ public class SpigotAutoReply {
 										+ conv.getAuthor().getUsername());
 								Console.info("\tReplies: "
 										+ conv.getRepliesCount());
+								if (hasSend) {
+									Thread.sleep(15000);
+									hasSend = false;
+								}
 								conv.reply(user, getMessage());
+								hasSend = true;
 							}
 						}
 						setConversations(latestConversations);
