@@ -1,0 +1,41 @@
+## ------------------------------ ##
+##
+## Spigot Auto PM Reply
+## (c) Maxim Van de Wynckel
+##
+## ------------------------------ ##
+
+## !!
+# This application will auto reply on PM's when active.
+# Usage is at the users own risk.
+#
+# Do not run the SpigotAutoReply.jar as root and make sure this
+# file can only be read by the user running the SpigotAutoReply.jar.
+## !!
+
+
+# DO NOT EDIT!
+config: 1
+
+
+
+# Spigot Username
+username: ''
+
+# Spigot password
+password: ''
+
+# Check interval in seconds
+# This is the interval the application
+# will check for new messages.
+interval: 60
+
+# Auto reply message (BB Code supported)
+message: |
+  Dear,
+  
+  This is an [b]automated[/b] message with the Spigot Site API.
+  Please ignore this message.
+  
+  Best Regards,
+  [i]Maxim Van de Wynckel[/i]
