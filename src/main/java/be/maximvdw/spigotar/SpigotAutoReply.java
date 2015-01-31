@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.maximvdw.spigotar.config.Configuration;
-import be.maximvdw.spigotar.storage.YamlStorage;
 import be.maximvdw.spigotar.ui.Console;
 import be.maximvdw.spigotsite.SpigotSiteCore;
 import be.maximvdw.spigotsite.api.SpigotSite;
@@ -49,8 +48,8 @@ public class SpigotAutoReply {
 		Console.info("Getting the latests private messages ...");
 		if (user == null)
 			return;
-		List<Conversation> conversations = SpigotSite.getAPI().getUserManager()
-				.getConversations(getUser(), 20);
+		List<Conversation> conversations = SpigotSite.getAPI()
+				.getConversationManager().getConversations(getUser(), 20);
 		for (Conversation conv : conversations) {
 			Console.info("\t" + conv.getAuthor().getUsername() + ": "
 					+ conv.getTitle());
@@ -66,7 +65,8 @@ public class SpigotAutoReply {
 						Console.info("Checking for new messages ...");
 						List<Conversation> latestConversations = new ArrayList<Conversation>();
 						latestConversations = SpigotSite.getAPI()
-								.getUserManager().getConversations(user, 20);
+								.getConversationManager()
+								.getConversations(user, 20);
 						boolean hasSend = false;
 						for (Conversation conv : latestConversations) {
 							if (!getConversations().contains(conv)) {
