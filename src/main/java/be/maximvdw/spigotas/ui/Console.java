@@ -1,4 +1,4 @@
-package be.maximvdw.spigotar.ui;
+package be.maximvdw.spigotas.ui;
 
 import java.io.BufferedReader;
 import java.io.IOException;

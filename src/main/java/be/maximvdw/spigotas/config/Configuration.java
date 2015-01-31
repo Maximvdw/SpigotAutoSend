@@ -1,4 +1,4 @@
-package be.maximvdw.spigotar.config;
+package be.maximvdw.spigotas.config;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 
-import be.maximvdw.spigotar.ui.Console;
+import be.maximvdw.spigotas.ui.Console;
 
 /**
  * Configuration

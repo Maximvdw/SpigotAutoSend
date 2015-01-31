@@ -1,4 +1,4 @@
-package be.maximvdw.spigotar.storage;
+package be.maximvdw.spigotas.storage;
 
 import java.io.BufferedWriter;
 import java.io.File;
