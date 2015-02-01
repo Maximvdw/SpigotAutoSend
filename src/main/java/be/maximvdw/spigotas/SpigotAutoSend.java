@@ -69,6 +69,7 @@ public class SpigotAutoSend {
 				while (running) {
 					try {
 						Thread.sleep(interval * 1000);
+						boolean hasSend = false;
 						for (Resource res : buyers.keySet()) {
 							Console.info("Checking for new buyers in: "
 									+ res.getResourceName());
@@ -77,7 +78,8 @@ public class SpigotAutoSend {
 									.getResourceManager()
 									.getPremiumResourceBuyers(
 											(PremiumResource) res, user);
-							boolean hasSend = false;
+							if (newBuyers.isEmpty() && (!buyers.isEmpty()))
+								continue;
 							for (User newBuyer : newBuyers) {
 								if (!buyers.get(res).contains(newBuyer)) {
 									Set<String> recipients = new HashSet<String>();
@@ -90,32 +92,34 @@ public class SpigotAutoSend {
 										Thread.sleep(15000);
 										hasSend = false;
 									}
-									SpigotSite
-											.getAPI()
-											.getConversationManager()
-											.createConversation(
-													user,
-													recipients,
-													Configuration
-															.getString("title")
-															.replace(
-																	"{plugin}",
-																	res.getResourceName())
-															.replace(
-																	"{member}",
-																	newBuyer.getUsername()),
-													Configuration
-															.getString(
-																	"message")
-															.replace(
-																	"{plugin}",
-																	res.getResourceName())
-															.replace(
-																	"{member}",
-																	newBuyer.getUsername()),
-													Configuration
-															.getBoolean("options.lock"),
-													false, false);
+									if (!Configuration.getBoolean("debug"))
+										SpigotSite
+												.getAPI()
+												.getConversationManager()
+												.createConversation(
+														user,
+														recipients,
+														Configuration
+																.getString(
+																		"title")
+																.replace(
+																		"{plugin}",
+																		res.getResourceName())
+																.replace(
+																		"{member}",
+																		newBuyer.getUsername()),
+														Configuration
+																.getString(
+																		"message")
+																.replace(
+																		"{plugin}",
+																		res.getResourceName())
+																.replace(
+																		"{member}",
+																		newBuyer.getUsername()),
+														Configuration
+																.getBoolean("options.lock"),
+														false, false);
 
 									hasSend = true;
 								}
