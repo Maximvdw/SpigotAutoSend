@@ -1,11 +1,15 @@
 package be.maximvdw.spigotas;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import be.maximvdw.spigotas.config.Configuration;
+import be.maximvdw.spigotas.storage.LogStorage;
 import be.maximvdw.spigotas.ui.Console;
 import be.maximvdw.spigotsite.SpigotSiteCore;
 import be.maximvdw.spigotsite.api.SpigotSite;
@@ -24,7 +28,9 @@ public class SpigotAutoSend {
 	private User user = null;
 	private HashMap<Resource, List<User>> buyers = new HashMap<Resource, List<User>>();
 	private boolean running = true;
+	private LogStorage log = null;
 
+	@SuppressWarnings("deprecation")
 	public SpigotAutoSend(String... args) {
 		Console.info("Initializing Spigot Auto Send ...");
 		new SpigotSiteCore();
@@ -63,6 +69,9 @@ public class SpigotAutoSend {
 			return;
 		}
 
+		log = new LogStorage("log");
+		logMessage("Starting now ...");
+
 		Thread th = new Thread(new Runnable() {
 
 			public void run() {
@@ -92,6 +101,25 @@ public class SpigotAutoSend {
 										Thread.sleep(15000);
 										hasSend = false;
 									}
+									String title = Configuration
+											.getString("title")
+											.replace("{plugin}",
+													res.getResourceName())
+											.replace("{member}",
+													newBuyer.getUsername());
+									String message = Configuration
+											.getString("message")
+											.replace("{plugin}",
+													res.getResourceName())
+											.replace("{member}",
+													newBuyer.getUsername());
+
+									logMessage("[BUYER] "
+											+ newBuyer.getUsername() + " ["
+											+ newBuyer.getUserId()
+											+ "] bought "
+											+ res.getResourceName());
+
 									if (!Configuration.getBoolean("debug"))
 										SpigotSite
 												.getAPI()
@@ -99,24 +127,8 @@ public class SpigotAutoSend {
 												.createConversation(
 														user,
 														recipients,
-														Configuration
-																.getString(
-																		"title")
-																.replace(
-																		"{plugin}",
-																		res.getResourceName())
-																.replace(
-																		"{member}",
-																		newBuyer.getUsername()),
-														Configuration
-																.getString(
-																		"message")
-																.replace(
-																		"{plugin}",
-																		res.getResourceName())
-																.replace(
-																		"{member}",
-																		newBuyer.getUsername()),
+														title,
+														message,
 														Configuration
 																.getBoolean("options.lock"),
 														false, false);
@@ -138,7 +150,20 @@ public class SpigotAutoSend {
 		th.start();
 		Console.info("Press ENTER to quit.");
 		System.console().readLine();
+		th.stop();
 		running = false;
+	}
+
+	private void logMessage(String message) {
+		Date today;
+		String output;
+		SimpleDateFormat formatter;
+
+		formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ENGLISH);
+		today = new Date();
+		output = formatter.format(today);
+		String resultMessage = "[" + output + "] " + message;
+		log.appendLog(resultMessage);
 	}
 
 	public static void main(String... args) {
