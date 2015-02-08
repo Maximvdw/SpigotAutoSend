@@ -15,20 +15,28 @@
 
 
 # DO NOT EDIT!
-config: 1
+config: 2
 
 
-
-# Spigot Username
-username: ''
-
-# Spigot password
-password: ''
+resource-author:
+  # Spigot Username
+  username: ''
+  # Spigot password
+  password: ''
+  
+conversation-sender:
+  # Enabled (if false, it will use the resource author to send)
+  enabled: false
+  # Spigot Username
+  username: ''
+  # Spigot password
+  password: ''
+  
 
 # Check interval in seconds
 # This is the interval the application
 # will check for new buyers.
-interval: 20
+interval: 120
 
 # Debug: Will pretend sending the message in the console
 debug: false

@@ -13,10 +13,13 @@ import be.maximvdw.spigotas.storage.LogStorage;
 import be.maximvdw.spigotas.ui.Console;
 import be.maximvdw.spigotsite.SpigotSiteCore;
 import be.maximvdw.spigotsite.api.SpigotSite;
+import be.maximvdw.spigotsite.api.exceptions.ConnectionFailedException;
+import be.maximvdw.spigotsite.api.exceptions.SpamWarningException;
 import be.maximvdw.spigotsite.api.resource.PremiumResource;
 import be.maximvdw.spigotsite.api.resource.Resource;
 import be.maximvdw.spigotsite.api.user.User;
 import be.maximvdw.spigotsite.api.user.exceptions.InvalidCredentialsException;
+import be.maximvdw.spigotsite.user.SpigotUser;
 
 /**
  * Spigot Auto Reply
@@ -26,6 +29,7 @@ import be.maximvdw.spigotsite.api.user.exceptions.InvalidCredentialsException;
 public class SpigotAutoSend {
 	/* Authenticated user */
 	private User user = null;
+	private User conversationUser = null;
 	private HashMap<Resource, List<User>> buyers = new HashMap<Resource, List<User>>();
 	private boolean running = true;
 	private LogStorage log = null;
@@ -59,8 +63,19 @@ public class SpigotAutoSend {
 		for (Resource res : resources) {
 			if (res instanceof PremiumResource) {
 				Console.info("\t" + res.getResourceName());
-				buyers.put(res, SpigotSite.getAPI().getResourceManager()
-						.getPremiumResourceBuyers((PremiumResource) res, user));
+				try {
+					buyers.put(
+							res,
+							SpigotSite
+									.getAPI()
+									.getResourceManager()
+									.getPremiumResourceBuyers(
+											(PremiumResource) res, user));
+				} catch (ConnectionFailedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return;
+				}
 			}
 		}
 
@@ -78,6 +93,8 @@ public class SpigotAutoSend {
 				while (running) {
 					try {
 						Thread.sleep(interval * 1000);
+						if (((SpigotUser) user).requiresRefresh())
+							logMessage(" -- User requires a refresh!");
 						boolean hasSend = false;
 						for (Resource res : buyers.keySet()) {
 							Console.info("Checking for new buyers in: "
@@ -121,17 +138,22 @@ public class SpigotAutoSend {
 											+ res.getResourceName());
 
 									if (!Configuration.getBoolean("debug"))
-										SpigotSite
-												.getAPI()
-												.getConversationManager()
-												.createConversation(
-														user,
-														recipients,
-														title,
-														message,
-														Configuration
-																.getBoolean("options.lock"),
-														false, false);
+										try {
+											SpigotSite
+													.getAPI()
+													.getConversationManager()
+													.createConversation(
+															user,
+															recipients,
+															title,
+															message,
+															Configuration
+																	.getBoolean("options.lock"),
+															false, false);
+										} catch (SpamWarningException ex) {
+											Console.info("Spamming detected! ... Waiting for the next interval!");
+											continue;
+										}
 
 									hasSend = true;
 								}
@@ -176,5 +198,13 @@ public class SpigotAutoSend {
 
 	private void setUser(User user) {
 		this.user = user;
+	}
+
+	public User getConversationUser() {
+		return conversationUser;
+	}
+
+	public void setConversationUser(User conversationUser) {
+		this.conversationUser = conversationUser;
 	}
 }
