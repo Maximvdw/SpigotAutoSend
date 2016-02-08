@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import be.maximvdw.spigotas.config.Configuration;
@@ -93,8 +94,6 @@ public class SpigotAutoSend {
 				while (running) {
 					try {
 						Thread.sleep(interval * 1000);
-						if (((SpigotUser) user).requiresRefresh())
-							logMessage(" -- User requires a refresh!");
 						boolean hasSend = false;
 						for (Resource res : buyers.keySet()) {
 							Console.info("Checking for new buyers in: "
