@@ -15,7 +15,7 @@
 
 
 # DO NOT EDIT!
-config: 1
+config: 2
 
 
 
@@ -24,6 +24,9 @@ username: ''
 
 # Spigot password
 password: ''
+
+# Spigot 2FA key if enabled
+2fakey: ''
 
 # Check interval in seconds
 # This is the interval the application

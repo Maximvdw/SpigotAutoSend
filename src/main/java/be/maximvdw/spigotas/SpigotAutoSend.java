@@ -1,14 +1,5 @@
 package be.maximvdw.spigotas;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import be.maximvdw.spigotas.config.Configuration;
 import be.maximvdw.spigotas.storage.LogStorage;
 import be.maximvdw.spigotas.ui.Console;
@@ -20,7 +11,10 @@ import be.maximvdw.spigotsite.api.resource.PremiumResource;
 import be.maximvdw.spigotsite.api.resource.Resource;
 import be.maximvdw.spigotsite.api.user.User;
 import be.maximvdw.spigotsite.api.user.exceptions.InvalidCredentialsException;
-import be.maximvdw.spigotsite.user.SpigotUser;
+import be.maximvdw.spigotsite.api.user.exceptions.TwoFactorAuthenticationException;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Spigot Auto Reply
@@ -39,22 +33,27 @@ public class SpigotAutoSend {
 	public SpigotAutoSend(String... args) {
 		Console.info("Initializing Spigot Auto Send ...");
 		new SpigotSiteCore();
-		new Configuration(1); // Version 1
+		new Configuration(2); // Version 2
 
 		String username = Configuration.getString("username");
 		String password = Configuration.getString("password");
+		String totpSecret = Configuration.getString("2fakey");
 		final int interval = Configuration.getInt("interval");
 
 		Console.info("Logging in " + username + " ...");
 		try {
 			User user = SpigotSite.getAPI().getUserManager()
-					.authenticate(username, password);
+					.authenticate(username, password,totpSecret);
 			setUser(user);
 		} catch (InvalidCredentialsException e) {
 			Console.info("Unable to log in! Wrong credentials!");
 			return;
-		}
-		password = null;
+		} catch (TwoFactorAuthenticationException e) {
+            Console.info("Unable to log in! Two factor authentication failed!");
+            return;
+        }
+        password = null;
+        totpSecret = null;
 
 		Console.info("Getting your premium plugins ...");
 		if (user == null)
