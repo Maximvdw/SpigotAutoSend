@@ -110,7 +110,6 @@ public class SpigotAutoSend {
                                     .getResourceManager()
                                     .getPremiumResourceBuyers(
                                             (PremiumResource) res, user);
-                            Console.info("\t\tBuyers: " + newBuyers.size());
                             if (newBuyers.isEmpty() && (!buyers.isEmpty()))
                                 continue;
                             for (User newBuyer : newBuyers) {

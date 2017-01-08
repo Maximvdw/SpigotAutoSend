@@ -31,7 +31,7 @@ password: ''
 # Check interval in seconds
 # This is the interval the application
 # will check for new buyers.
-interval: 20
+interval: 40
 
 # Debug: Will pretend sending the message in the console
 debug: false
