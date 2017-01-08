@@ -28,6 +28,7 @@ public class SpigotAutoSend {
     private HashMap<Resource, List<User>> buyers = new HashMap<Resource, List<User>>();
     private boolean running = true;
     private LogStorage log = null;
+    private String overrideUser = null;
 
     @SuppressWarnings("deprecation")
     public SpigotAutoSend(String... args) {
@@ -38,6 +39,11 @@ public class SpigotAutoSend {
         String username = Configuration.getString("username");
         String password = Configuration.getString("password");
         String totpSecret = Configuration.getString("2fakey");
+
+        overrideUser = Configuration.getString("override-user");
+        if (overrideUser.equals("")){
+            overrideUser = null;
+        }
         final int interval = Configuration.getInt("interval");
 
         Console.info("Logging in " + username + " ...");
@@ -110,9 +116,9 @@ public class SpigotAutoSend {
                             for (User newBuyer : newBuyers) {
                                 if (!buyers.get(res).contains(newBuyer)) {
                                     Set<String> recipients = new HashSet<String>();
-                                    recipients.add(newBuyer.getUsername());
+                                    recipients.add((overrideUser == null ? newBuyer.getUsername() : overrideUser));
                                     Console.info("Sending a message to "
-                                            + newBuyer.getUsername());
+                                            + (overrideUser == null ? newBuyer.getUsername() : overrideUser));
 
                                     if (hasSend) {
                                         Console.info("Waiting before sending to prevent spam ...");

@@ -45,6 +45,11 @@ options:
 # Auto title (plain text)
 title: 'Thank you for your purchase!'
 
+# When not empty, this will override the buyer and send to this user
+# Useful if you want to spam someone else with your buyer alerts
+# ^ Don't you dare
+override-user: ''
+
 # Auto message (BB Code supported)
 # Placeholders:
 #   {plugin} - The title of your resource

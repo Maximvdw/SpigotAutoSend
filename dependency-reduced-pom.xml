@@ -38,9 +38,6 @@
         <version>2.12</version>
         <configuration>
           <junitArtifactName>junit:junit</junitArtifactName>
-          <encoding>UTF-8</encoding>
-          <inputEncoding>UTF-8</inputEncoding>
-          <outputEncoding>UTF-8</outputEncoding>
           <argLine>-Xms256m -Xmx512m -XX:MaxPermSize=128m -ea
 						-Dfile.encoding=UTF-8</argLine>
         </configuration>
