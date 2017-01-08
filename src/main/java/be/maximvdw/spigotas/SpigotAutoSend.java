@@ -9,6 +9,7 @@ import be.maximvdw.spigotsite.api.exceptions.ConnectionFailedException;
 import be.maximvdw.spigotsite.api.exceptions.SpamWarningException;
 import be.maximvdw.spigotsite.api.resource.PremiumResource;
 import be.maximvdw.spigotsite.api.resource.Resource;
+import be.maximvdw.spigotsite.api.user.Conversation;
 import be.maximvdw.spigotsite.api.user.User;
 import be.maximvdw.spigotsite.api.user.exceptions.InvalidCredentialsException;
 import be.maximvdw.spigotsite.api.user.exceptions.TwoFactorAuthenticationException;
@@ -41,7 +42,7 @@ public class SpigotAutoSend {
         String totpSecret = Configuration.getString("2fakey");
 
         overrideUser = Configuration.getString("override-user");
-        if (overrideUser.equals("")){
+        if (overrideUser.equals("")) {
             overrideUser = null;
         }
         final int interval = Configuration.getInt("interval");
@@ -145,7 +146,7 @@ public class SpigotAutoSend {
 
                                     if (!Configuration.getBoolean("debug")) {
                                         try {
-                                            SpigotSite
+                                            Conversation conversation = SpigotSite
                                                     .getAPI()
                                                     .getConversationManager()
                                                     .createConversation(
@@ -156,6 +157,10 @@ public class SpigotAutoSend {
                                                             Configuration
                                                                     .getBoolean("options.lock"),
                                                             false, false);
+                                            if (Configuration
+                                                    .getBoolean("options.mark-unread")) {
+                                                conversation.markAsUnread(user);
+                                            }
                                         } catch (SpamWarningException ex) {
                                             Console.info("Spamming detected! ... Waiting for the next interval!");
                                             continue;
