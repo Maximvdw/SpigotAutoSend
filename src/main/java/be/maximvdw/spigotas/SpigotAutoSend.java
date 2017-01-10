@@ -33,7 +33,7 @@ public class SpigotAutoSend {
 
     @SuppressWarnings("deprecation")
     public SpigotAutoSend(String... args) {
-        Console.info("Initializing Spigot Auto Send ...");
+        Console.info("Initializing Spigot Auto Send v2.2.0 ...");
         new SpigotSiteCore();
         new Configuration(2); // Version 2
 
